@@ -1,19 +1,26 @@
 var express = require('express');
-var session = require('express-handlebars');
+var expressHandlebars = require('express-handlebars');
 var mongoose = require('mongoose');
 var cheerio  = require('cheerio');
 var bodyParser = require("body-parser");
 var request = require('request');
 var app = express();
 
-app.use(express.static("public"));
+app.use(express.static(__dirname + "/public"));
 mongoose.Promise = Promise;
 
 app.use(bodyParser.urlencoded({
-    extended: true 
+    extended: false 
 }));
 
-var db = process.env.MONGODB_URI || "mongodb://localhost/scraperTable";
+
+app.engine("handlebars", expressHandlebars({
+  defaultLayout: "main"
+}));
+app.set("view engine", "handlebars");
+
+
+var db = process.env.MONGODB_URI || "mongodb://localhost/scraperDB";
 
 // Connect mongoose to our database
 mongoose.connect(db, function(error) {
